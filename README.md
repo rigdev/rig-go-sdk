@@ -1,12 +1,15 @@
 # Rig Golang SDK
 
 ## Overview
+
 Rig provides the tools, modules and infrastructure you need to develop and manage applications on Kubernetes. The Rig Golang SDK enables access to Rig services from privileged environments (such as servers or cloud) in Golang.
 
 For more information, visit the [Rig Golang SDK setup guide](https://docs.rig.dev/sdks/golang).
 
 ## Installation
+
 The Rig Golang SDK can be installed using the go install utility:
+
 ```
 # Install the latest version:
 go get github.com/rigdev/rig-go-sdk@latest
@@ -14,9 +17,11 @@ go get github.com/rigdev/rig-go-sdk@latest
 # Or install a specific version:
 go get github.com/rigdev/rig-go-sdk@x.x.x
 ```
+
 ## Setup the Client
 
 To setup the client use the `rig.NewClient` method:
+
 ```go
 package main
 
@@ -64,6 +69,7 @@ By default, the SDK will use the environment variables `RIG_CLIENT_ID` and `RIG_
 ```
 
 ## Documentation
-- [Install Rig](https://docs.rig.dev/get-started)
-- [Setup Users](https://docs.rig.dev/users/overview)
-- [Deploy Capsules](https://docs.rig.dev/capsules/overview)
+
+- [Install Rig](https://docs.rig.dev/getting-started)
+- [Setup Users](https://docs.rig.dev/users)
+- [Deploy Capsules](https://docs.rig.dev/capsules)
