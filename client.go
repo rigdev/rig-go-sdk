@@ -8,6 +8,7 @@ import (
 	"github.com/rigdev/rig-go-api/api/v1/authentication"
 	"github.com/rigdev/rig-go-api/api/v1/authentication/authenticationconnect"
 	"github.com/rigdev/rig-go-api/api/v1/capsule/capsuleconnect"
+	"github.com/rigdev/rig-go-api/api/v1/cluster/clusterconnect"
 	"github.com/rigdev/rig-go-api/api/v1/database/databaseconnect"
 	"github.com/rigdev/rig-go-api/api/v1/group/groupconnect"
 	"github.com/rigdev/rig-go-api/api/v1/project/projectconnect"
@@ -45,6 +46,8 @@ type Client interface {
 	Project() projectconnect.ServiceClient
 	// ProjectSettings service for managing settings of projects
 	ProjectSettings() projectsettingsconnect.ServiceClient
+	// Cluster service for managing the Rig cluster
+	Cluster() clusterconnect.ServiceClient
 
 	// Set the access- and refresh token pair. This will use the underlying SessionManager.
 	// The client will refresh the tokens in the background as needed.
@@ -81,6 +84,7 @@ type client struct {
 	capsule         capsuleconnect.ServiceClient
 	project         projectconnect.ServiceClient
 	projectSettings projectsettingsconnect.ServiceClient
+	cluster         clusterconnect.ServiceClient
 }
 
 func NewClient(opts ...Option) Client {
@@ -125,6 +129,7 @@ func NewClient(opts ...Option) Client {
 		capsule:         capsuleconnect.NewServiceClient(cfg.hc, cfg.host, connect.WithInterceptors(ics...)),
 		project:         projectconnect.NewServiceClient(cfg.hc, cfg.host, connect.WithInterceptors(ics...)),
 		projectSettings: projectsettingsconnect.NewServiceClient(cfg.hc, cfg.host, connect.WithInterceptors(ics...)),
+		cluster:         clusterconnect.NewServiceClient(cfg.hc, cfg.host, connect.WithInterceptors(ics...)),
 	}
 }
 
@@ -174,6 +179,10 @@ func (c *client) Project() projectconnect.ServiceClient {
 
 func (c *client) ProjectSettings() projectsettingsconnect.ServiceClient {
 	return c.projectSettings
+}
+
+func (c *client) Cluster() clusterconnect.ServiceClient {
+	return c.cluster
 }
 
 func getEnv(key, def string) string {
