@@ -7,6 +7,7 @@ import (
 	"github.com/bufbuild/connect-go"
 	"github.com/rigdev/rig-go-api/api/v1/authentication"
 	"github.com/rigdev/rig-go-api/api/v1/authentication/authenticationconnect"
+	"github.com/rigdev/rig-go-api/api/v1/build/buildconnect"
 	"github.com/rigdev/rig-go-api/api/v1/capsule/capsuleconnect"
 	"github.com/rigdev/rig-go-api/api/v1/cluster/clusterconnect"
 	"github.com/rigdev/rig-go-api/api/v1/database/databaseconnect"
@@ -48,6 +49,7 @@ type Client interface {
 	ProjectSettings() projectsettingsconnect.ServiceClient
 	// Cluster service for managing the Rig cluster
 	Cluster() clusterconnect.ServiceClient
+	Build() buildconnect.ServiceClient
 
 	// Set the access- and refresh token pair. This will use the underlying SessionManager.
 	// The client will refresh the tokens in the background as needed.
@@ -85,6 +87,7 @@ type client struct {
 	project         projectconnect.ServiceClient
 	projectSettings projectsettingsconnect.ServiceClient
 	cluster         clusterconnect.ServiceClient
+	build           buildconnect.ServiceClient
 }
 
 func NewClient(opts ...Option) Client {
@@ -130,6 +133,7 @@ func NewClient(opts ...Option) Client {
 		project:         projectconnect.NewServiceClient(cfg.hc, cfg.host, connect.WithInterceptors(ics...)),
 		projectSettings: projectsettingsconnect.NewServiceClient(cfg.hc, cfg.host, connect.WithInterceptors(ics...)),
 		cluster:         clusterconnect.NewServiceClient(cfg.hc, cfg.host, connect.WithInterceptors(ics...)),
+		build:           buildconnect.NewServiceClient(cfg.hc, cfg.host, connect.WithInterceptors(ics...)),
 	}
 }
 
@@ -183,6 +187,10 @@ func (c *client) ProjectSettings() projectsettingsconnect.ServiceClient {
 
 func (c *client) Cluster() clusterconnect.ServiceClient {
 	return c.cluster
+}
+
+func (c *client) Build() buildconnect.ServiceClient {
+	return c.build
 }
 
 func getEnv(key, def string) string {
