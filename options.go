@@ -1,6 +1,8 @@
 package rig
 
 import (
+	"net/http"
+
 	"github.com/bufbuild/connect-go"
 	"github.com/rigdev/rig-go-api/api/v1/authentication"
 )
@@ -64,4 +66,16 @@ type withInterceptors struct {
 
 func (o *withInterceptors) apply(c *config) {
 	c.ics = o.ics
+}
+
+func WithClient(client *http.Client) Option {
+	return &withClientOption{client: client}
+}
+
+type withClientOption struct {
+	client *http.Client
+}
+
+func (o *withClientOption) apply(c *config) {
+	c.hc = o.client
 }

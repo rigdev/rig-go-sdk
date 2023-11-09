@@ -1,8 +1,12 @@
 package rig
 
 import (
+	"crypto/tls"
+	"net"
 	"net/http"
 	"os"
+	"strings"
+	"time"
 
 	"github.com/bufbuild/connect-go"
 	"github.com/rigdev/rig-go-api/api/v1/authentication"
@@ -19,6 +23,7 @@ import (
 	"github.com/rigdev/rig-go-api/api/v1/storage/storageconnect"
 	usersettingsconnect "github.com/rigdev/rig-go-api/api/v1/user/settings/settingsconnect"
 	"github.com/rigdev/rig-go-api/api/v1/user/userconnect"
+	"golang.org/x/net/http2"
 )
 
 // Client for interacting with the Rig APIs. Each of the services are available as a `connect.build` Client,
@@ -90,10 +95,20 @@ type client struct {
 	build           buildconnect.ServiceClient
 }
 
+var _h2cClient = &http.Client{
+	Transport: &http2.Transport{
+		AllowHTTP: true,
+		DialTLS: func(network, addr string, cfg *tls.Config) (net.Conn, error) {
+			return net.Dial(network, addr)
+		},
+		ReadIdleTimeout:  30 * time.Second,
+		WriteByteTimeout: 30 * time.Second,
+	},
+}
+
 func NewClient(opts ...Option) Client {
 	cfg := &config{
 		host: getEnv("RIG_HOST", "http://localhost:4747"),
-		hc:   http.DefaultClient,
 		sm:   &simpleSessionManager{},
 	}
 
@@ -110,6 +125,15 @@ func NewClient(opts ...Option) Client {
 
 	for _, o := range opts {
 		o.apply(cfg)
+	}
+
+	if cfg.hc == nil {
+		// Support h2c (http2 plaintext) for http servers, to support BIDI streams.
+		if strings.HasPrefix(cfg.host, "http:") {
+			cfg.hc = _h2cClient
+		} else {
+			cfg.hc = http.DefaultClient
+		}
 	}
 
 	i := &authInterceptor{
