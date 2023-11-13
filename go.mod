@@ -5,7 +5,7 @@ go 1.20
 require (
 	github.com/bufbuild/connect-go v1.10.0
 	github.com/golang-jwt/jwt v3.2.2+incompatible
-	github.com/rigdev/rig-go-api v0.0.0-20231023134541-f560e5146635
+	github.com/rigdev/rig-go-api v0.0.0-20231113081606-6c48e003c860
 	github.com/stretchr/testify v1.8.2
 )
 
