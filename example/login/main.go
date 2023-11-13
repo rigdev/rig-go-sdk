@@ -19,10 +19,9 @@ func LoginExample() {
 	userEmail := "foobar@example.com"
 	userPassword := "mypassword"
 
-	apiKey := "31aef3ea-affa-47b9-94cb-8c7d552c055b"
+	projectID := "my-first-project"
 
 	client := rig.NewClient()
-
 	ctx := context.Background()
 
 	loginRes, err := client.Authentication().Login(ctx, &connect.Request[authentication.LoginRequest]{
@@ -34,8 +33,8 @@ func LoginExample() {
 							Email: userEmail,
 						},
 					},
-					Password: userPassword,
-					ApiKey:   apiKey,
+					Password:  userPassword,
+					ProjectId: projectID,
 				},
 			},
 		},
