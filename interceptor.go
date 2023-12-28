@@ -6,7 +6,7 @@ import (
 	"net/http"
 	"time"
 
-	"github.com/bufbuild/connect-go"
+	"connectrpc.com/connect"
 	"github.com/golang-jwt/jwt"
 	"github.com/rigdev/rig-go-api/api/v1/authentication"
 	"github.com/rigdev/rig-go-api/api/v1/authentication/authenticationconnect"

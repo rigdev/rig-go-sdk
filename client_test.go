@@ -4,7 +4,7 @@ import (
 	"context"
 	"testing"
 
-	"github.com/bufbuild/connect-go"
+	"connectrpc.com/connect"
 	"github.com/rigdev/rig-go-api/api/v1/group"
 	"github.com/rigdev/rig-go-api/api/v1/user"
 	"github.com/stretchr/testify/require"
@@ -33,7 +33,7 @@ func TestClient(t *testing.T) {
 
 	// test group client connection
 	createGroupResp, err := client.Group().Create(ctx, connect.NewRequest(&group.CreateRequest{Initializers: []*group.Update{
-		{Field: &group.Update_Name{Name: "my-group"}},
+		{Field: &group.Update_GroupId{GroupId: "my-group"}},
 	}}))
 	require.NoError(t, err)
 	t.Log("successfully created group")

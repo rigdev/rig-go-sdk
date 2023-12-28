@@ -3,7 +3,7 @@ package rig
 import (
 	"net/http"
 
-	"github.com/bufbuild/connect-go"
+	"connectrpc.com/connect"
 	"github.com/rigdev/rig-go-api/api/v1/authentication"
 )
 
