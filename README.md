@@ -30,7 +30,7 @@ import (
 	"fmt"
 	"log"
 
-	"github.com/bufbuild/connect-go"
+	"connectrpc.com/connect"
 	rig "github.com/rigdev/rig-go-sdk"
 	"github.com/rigdev/rig-go-api/api/v1/user"
 )
