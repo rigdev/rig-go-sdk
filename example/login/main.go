@@ -19,8 +19,6 @@ func LoginExample() {
 	userEmail := "foobar@example.com"
 	userPassword := "mypassword"
 
-	projectID := "my-first-project"
-
 	client := rig.NewClient()
 	ctx := context.Background()
 
@@ -33,8 +31,7 @@ func LoginExample() {
 							Email: userEmail,
 						},
 					},
-					Password:  userPassword,
-					ProjectId: projectID,
+					Password: userPassword,
 				},
 			},
 		},

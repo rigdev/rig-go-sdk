@@ -5,7 +5,7 @@ go 1.20
 require (
 	connectrpc.com/connect v1.14.0
 	github.com/golang-jwt/jwt v3.2.2+incompatible
-	github.com/rigdev/rig-go-api v0.0.0-20231228102241-8221adb75941
+	github.com/rigdev/rig-go-api v0.0.0-20240116101001-e8f7b22b6c67
 	github.com/stretchr/testify v1.8.2
 	golang.org/x/net v0.18.0
 )
