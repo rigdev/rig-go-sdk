@@ -14,6 +14,7 @@ import (
 	"github.com/rigdev/rig-go-api/api/v1/build/buildconnect"
 	"github.com/rigdev/rig-go-api/api/v1/capsule/capsuleconnect"
 	"github.com/rigdev/rig-go-api/api/v1/cluster/clusterconnect"
+	"github.com/rigdev/rig-go-api/api/v1/environment/environmentconnect"
 	"github.com/rigdev/rig-go-api/api/v1/group/groupconnect"
 	"github.com/rigdev/rig-go-api/api/v1/project/projectconnect"
 	projectsettingsconnect "github.com/rigdev/rig-go-api/api/v1/project/settings/settingsconnect"
@@ -47,6 +48,8 @@ type Client interface {
 	Cluster() clusterconnect.ServiceClient
 
 	Build() buildconnect.ServiceClient
+
+	Environment() environmentconnect.ServiceClient
 
 	// Set the access- and refresh token pair. This will use the underlying SessionManager.
 	// The client will refresh the tokens in the background as needed.
@@ -82,6 +85,7 @@ type client struct {
 	projectSettings projectsettingsconnect.ServiceClient
 	cluster         clusterconnect.ServiceClient
 	build           buildconnect.ServiceClient
+	environment     environmentconnect.ServiceClient
 }
 
 var _h2cClient = &http.Client{
@@ -144,6 +148,7 @@ func NewClient(opts ...Option) Client {
 		projectSettings: projectsettingsconnect.NewServiceClient(cfg.hc, cfg.host, connect.WithInterceptors(ics...)),
 		cluster:         clusterconnect.NewServiceClient(cfg.hc, cfg.host, connect.WithInterceptors(ics...)),
 		build:           buildconnect.NewServiceClient(cfg.hc, cfg.host, connect.WithInterceptors(ics...)),
+		environment:     environmentconnect.NewServiceClient(cfg.hc, cfg.host, connect.WithInterceptors(ics...)),
 	}
 }
 
@@ -189,6 +194,10 @@ func (c *client) Cluster() clusterconnect.ServiceClient {
 
 func (c *client) Build() buildconnect.ServiceClient {
 	return c.build
+}
+
+func (c *client) Environment() environmentconnect.ServiceClient {
+	return c.environment
 }
 
 func getEnv(key, def string) string {
