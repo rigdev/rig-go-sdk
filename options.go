@@ -1,7 +1,10 @@
 package rig
 
 import (
+	"encoding/base64"
+	"fmt"
 	"net/http"
+	"os"
 
 	"connectrpc.com/connect"
 	"github.com/rigdev/rig-go-api/api/v1/authentication"
@@ -78,4 +81,24 @@ type withClientOption struct {
 
 func (o *withClientOption) apply(c *config) {
 	c.hc = o.client
+}
+
+type WithBasicAuth struct {
+	cc ClientCredential
+}
+
+func WithBasicAuthOption(cc ClientCredential) Option {
+	return &WithBasicAuth{cc: cc}
+}
+
+func (o *WithBasicAuth) apply(c *config) {
+	if o.cc == (ClientCredential{}) {
+		o.cc = ClientCredential{
+			ClientID:     os.Getenv("RIG_CLIENT_ID"),
+			ClientSecret: os.Getenv("RIG_CLIENT_SECRET"),
+		}
+	}
+
+	base64ClientCredentials := base64.StdEncoding.EncodeToString([]byte(fmt.Sprintf("%s:%s", o.cc.ClientID, o.cc.ClientSecret)))
+	c.basicAuth = fmt.Sprintf("Basic %s", base64ClientCredentials)
 }

@@ -66,11 +66,12 @@ type ClientCredential struct {
 }
 
 type config struct {
-	host  string
-	login *authentication.LoginRequest
-	sm    SessionManager
-	hc    *http.Client
-	ics   []Interceptor
+	host      string
+	login     *authentication.LoginRequest
+	sm        SessionManager
+	hc        *http.Client
+	ics       []Interceptor
+	basicAuth string
 }
 
 type client struct {

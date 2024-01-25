@@ -24,14 +24,22 @@ var _omitAuth = map[string]struct{}{
 }
 
 type authInterceptor struct {
-	cfg       *config
-	projectId string
+	cfg *config
 }
 
 func (i *authInterceptor) handleAuth(ctx context.Context, h http.Header, method string) {
 	if _, ok := _omitAuth[method]; !ok {
-		i.setAuthorization(ctx, h)
+		if i.cfg.basicAuth != "" {
+			i.setBasicAuth(ctx, h)
+		} else {
+			i.setAuthorization(ctx, h)
+		}
 	}
+}
+
+func (i *authInterceptor) setBasicAuth(ctx context.Context, h http.Header) {
+	fmt.Println("basic auth")
+	h.Set("Authorization", i.cfg.basicAuth)
 }
 
 func (i *authInterceptor) setAuthorization(ctx context.Context, h http.Header) {
