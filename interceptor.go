@@ -38,7 +38,6 @@ func (i *authInterceptor) handleAuth(ctx context.Context, h http.Header, method 
 }
 
 func (i *authInterceptor) setBasicAuth(ctx context.Context, h http.Header) {
-	fmt.Println("basic auth")
 	h.Set("Authorization", i.cfg.basicAuth)
 }
 
