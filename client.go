@@ -11,11 +11,11 @@ import (
 	"connectrpc.com/connect"
 	"github.com/rigdev/rig-go-api/api/v1/authentication"
 	"github.com/rigdev/rig-go-api/api/v1/authentication/authenticationconnect"
-	"github.com/rigdev/rig-go-api/api/v1/build/buildconnect"
 	"github.com/rigdev/rig-go-api/api/v1/capsule/capsuleconnect"
 	"github.com/rigdev/rig-go-api/api/v1/cluster/clusterconnect"
 	"github.com/rigdev/rig-go-api/api/v1/environment/environmentconnect"
 	"github.com/rigdev/rig-go-api/api/v1/group/groupconnect"
+	"github.com/rigdev/rig-go-api/api/v1/image/imageconnect"
 	"github.com/rigdev/rig-go-api/api/v1/project/projectconnect"
 	projectsettingsconnect "github.com/rigdev/rig-go-api/api/v1/project/settings/settingsconnect"
 	"github.com/rigdev/rig-go-api/api/v1/service_account/service_accountconnect"
@@ -47,7 +47,7 @@ type Client interface {
 	// Cluster service for managing the Rig cluster
 	Cluster() clusterconnect.ServiceClient
 
-	Build() buildconnect.ServiceClient
+	Image() imageconnect.ServiceClient
 
 	Environment() environmentconnect.ServiceClient
 
@@ -85,7 +85,7 @@ type client struct {
 	project         projectconnect.ServiceClient
 	projectSettings projectsettingsconnect.ServiceClient
 	cluster         clusterconnect.ServiceClient
-	build           buildconnect.ServiceClient
+	image           imageconnect.ServiceClient
 	environment     environmentconnect.ServiceClient
 }
 
@@ -148,7 +148,7 @@ func NewClient(opts ...Option) Client {
 		project:         projectconnect.NewServiceClient(cfg.hc, cfg.host, connect.WithInterceptors(ics...)),
 		projectSettings: projectsettingsconnect.NewServiceClient(cfg.hc, cfg.host, connect.WithInterceptors(ics...)),
 		cluster:         clusterconnect.NewServiceClient(cfg.hc, cfg.host, connect.WithInterceptors(ics...)),
-		build:           buildconnect.NewServiceClient(cfg.hc, cfg.host, connect.WithInterceptors(ics...)),
+		image:           imageconnect.NewServiceClient(cfg.hc, cfg.host, connect.WithInterceptors(ics...)),
 		environment:     environmentconnect.NewServiceClient(cfg.hc, cfg.host, connect.WithInterceptors(ics...)),
 	}
 }
@@ -193,8 +193,8 @@ func (c *client) Cluster() clusterconnect.ServiceClient {
 	return c.cluster
 }
 
-func (c *client) Build() buildconnect.ServiceClient {
-	return c.build
+func (c *client) Image() imageconnect.ServiceClient {
+	return c.image
 }
 
 func (c *client) Environment() environmentconnect.ServiceClient {
