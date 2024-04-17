@@ -18,6 +18,7 @@ import (
 	"github.com/rigdev/rig-go-api/api/v1/image/imageconnect"
 	"github.com/rigdev/rig-go-api/api/v1/project/projectconnect"
 	projectsettingsconnect "github.com/rigdev/rig-go-api/api/v1/project/settings/settingsconnect"
+	"github.com/rigdev/rig-go-api/api/v1/role/roleconnect"
 	"github.com/rigdev/rig-go-api/api/v1/service_account/service_accountconnect"
 	usersettingsconnect "github.com/rigdev/rig-go-api/api/v1/user/settings/settingsconnect"
 	"github.com/rigdev/rig-go-api/api/v1/user/userconnect"
@@ -50,6 +51,8 @@ type Client interface {
 	Image() imageconnect.ServiceClient
 
 	Environment() environmentconnect.ServiceClient
+
+	Role() roleconnect.ServiceClient
 
 	// Set the access- and refresh token pair. This will use the underlying SessionManager.
 	// The client will refresh the tokens in the background as needed.
@@ -87,6 +90,7 @@ type client struct {
 	cluster         clusterconnect.ServiceClient
 	image           imageconnect.ServiceClient
 	environment     environmentconnect.ServiceClient
+	role            roleconnect.ServiceClient
 }
 
 var _h2cClient = &http.Client{
@@ -150,6 +154,7 @@ func NewClient(opts ...Option) Client {
 		cluster:         clusterconnect.NewServiceClient(cfg.hc, cfg.host, connect.WithInterceptors(ics...)),
 		image:           imageconnect.NewServiceClient(cfg.hc, cfg.host, connect.WithInterceptors(ics...)),
 		environment:     environmentconnect.NewServiceClient(cfg.hc, cfg.host, connect.WithInterceptors(ics...)),
+		role:            roleconnect.NewServiceClient(cfg.hc, cfg.host, connect.WithInterceptors(ics...)),
 	}
 }
 
@@ -199,6 +204,10 @@ func (c *client) Image() imageconnect.ServiceClient {
 
 func (c *client) Environment() environmentconnect.ServiceClient {
 	return c.environment
+}
+
+func (c *client) Role() roleconnect.ServiceClient {
+	return c.role
 }
 
 func getEnv(key, def string) string {
