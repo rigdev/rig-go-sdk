@@ -17,10 +17,9 @@ import (
 	"github.com/rigdev/rig-go-api/api/v1/group/groupconnect"
 	"github.com/rigdev/rig-go-api/api/v1/image/imageconnect"
 	"github.com/rigdev/rig-go-api/api/v1/project/projectconnect"
-	projectsettingsconnect "github.com/rigdev/rig-go-api/api/v1/project/settings/settingsconnect"
 	"github.com/rigdev/rig-go-api/api/v1/role/roleconnect"
 	"github.com/rigdev/rig-go-api/api/v1/service_account/service_accountconnect"
-	usersettingsconnect "github.com/rigdev/rig-go-api/api/v1/user/settings/settingsconnect"
+	"github.com/rigdev/rig-go-api/api/v1/user/settings/settingsconnect"
 	"github.com/rigdev/rig-go-api/api/v1/user/userconnect"
 	"golang.org/x/net/http2"
 )
@@ -33,8 +32,6 @@ type Client interface {
 	Authentication() authenticationconnect.ServiceClient
 	// User service for managing users.
 	User() userconnect.ServiceClient
-	// UserSettings service for managing settings for the entire User module.
-	UserSettings() usersettingsconnect.ServiceClient
 	// ServiceAccount service for creating and maintaining OAuth2 Service Accounts.
 	ServiceAccount() service_accountconnect.ServiceClient
 	// Group service for managing groups and associating users to them.
@@ -43,8 +40,6 @@ type Client interface {
 	Capsule() capsuleconnect.ServiceClient
 	// Project API for configuring the overall settings of the project.
 	Project() projectconnect.ServiceClient
-	// ProjectSettings service for managing settings of projects
-	ProjectSettings() projectsettingsconnect.ServiceClient
 	// Cluster service for managing the Rig cluster
 	Cluster() clusterconnect.ServiceClient
 
@@ -53,6 +48,8 @@ type Client interface {
 	Environment() environmentconnect.ServiceClient
 
 	Role() roleconnect.ServiceClient
+
+	Settings() settingsconnect.ServiceClient
 
 	// Set the access- and refresh token pair. This will use the underlying SessionManager.
 	// The client will refresh the tokens in the background as needed.
@@ -81,16 +78,15 @@ type client struct {
 	cfg             *config
 	authentication  authenticationconnect.ServiceClient
 	user            userconnect.ServiceClient
-	userSettings    usersettingsconnect.ServiceClient
 	service_account service_accountconnect.ServiceClient
 	group           groupconnect.ServiceClient
 	capsule         capsuleconnect.ServiceClient
 	project         projectconnect.ServiceClient
-	projectSettings projectsettingsconnect.ServiceClient
 	cluster         clusterconnect.ServiceClient
 	image           imageconnect.ServiceClient
 	environment     environmentconnect.ServiceClient
 	role            roleconnect.ServiceClient
+	settings        settingsconnect.ServiceClient
 }
 
 var _h2cClient = &http.Client{
@@ -146,15 +142,14 @@ func NewClient(opts ...Option) Client {
 		authentication:  authenticationconnect.NewServiceClient(cfg.hc, cfg.host, connect.WithInterceptors(ics...)),
 		service_account: service_accountconnect.NewServiceClient(cfg.hc, cfg.host, connect.WithInterceptors(ics...)),
 		user:            userconnect.NewServiceClient(cfg.hc, cfg.host, connect.WithInterceptors(ics...)),
-		userSettings:    usersettingsconnect.NewServiceClient(cfg.hc, cfg.host, connect.WithInterceptors(ics...)),
 		group:           groupconnect.NewServiceClient(cfg.hc, cfg.host, connect.WithInterceptors(ics...)),
 		capsule:         capsuleconnect.NewServiceClient(cfg.hc, cfg.host, connect.WithInterceptors(ics...)),
 		project:         projectconnect.NewServiceClient(cfg.hc, cfg.host, connect.WithInterceptors(ics...)),
-		projectSettings: projectsettingsconnect.NewServiceClient(cfg.hc, cfg.host, connect.WithInterceptors(ics...)),
 		cluster:         clusterconnect.NewServiceClient(cfg.hc, cfg.host, connect.WithInterceptors(ics...)),
 		image:           imageconnect.NewServiceClient(cfg.hc, cfg.host, connect.WithInterceptors(ics...)),
 		environment:     environmentconnect.NewServiceClient(cfg.hc, cfg.host, connect.WithInterceptors(ics...)),
 		role:            roleconnect.NewServiceClient(cfg.hc, cfg.host, connect.WithInterceptors(ics...)),
+		settings:        settingsconnect.NewServiceClient(cfg.hc, cfg.host, connect.WithInterceptors(ics...)),
 	}
 }
 
@@ -168,10 +163,6 @@ func (c *client) Authentication() authenticationconnect.ServiceClient {
 
 func (c *client) User() userconnect.ServiceClient {
 	return c.user
-}
-
-func (c *client) UserSettings() usersettingsconnect.ServiceClient {
-	return c.userSettings
 }
 
 func (c *client) ServiceAccount() service_accountconnect.ServiceClient {
@@ -190,8 +181,8 @@ func (c *client) Project() projectconnect.ServiceClient {
 	return c.project
 }
 
-func (c *client) ProjectSettings() projectsettingsconnect.ServiceClient {
-	return c.projectSettings
+func (c *client) Settings() settingsconnect.ServiceClient {
+	return c.settings
 }
 
 func (c *client) Cluster() clusterconnect.ServiceClient {
