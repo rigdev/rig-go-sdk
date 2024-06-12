@@ -19,7 +19,7 @@ import (
 	"github.com/rigdev/rig-go-api/api/v1/project/projectconnect"
 	"github.com/rigdev/rig-go-api/api/v1/role/roleconnect"
 	"github.com/rigdev/rig-go-api/api/v1/service_account/service_accountconnect"
-	"github.com/rigdev/rig-go-api/api/v1/user/settings/settingsconnect"
+	"github.com/rigdev/rig-go-api/api/v1/settings/settingsconnect"
 	"github.com/rigdev/rig-go-api/api/v1/user/userconnect"
 	"golang.org/x/net/http2"
 )
