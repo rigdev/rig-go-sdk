@@ -9,6 +9,7 @@ import (
 	"time"
 
 	"connectrpc.com/connect"
+	"github.com/rigdev/rig-go-api/api/v1/activity/activityconnect"
 	"github.com/rigdev/rig-go-api/api/v1/authentication"
 	"github.com/rigdev/rig-go-api/api/v1/authentication/authenticationconnect"
 	"github.com/rigdev/rig-go-api/api/v1/capsule/capsuleconnect"
@@ -16,6 +17,7 @@ import (
 	"github.com/rigdev/rig-go-api/api/v1/environment/environmentconnect"
 	"github.com/rigdev/rig-go-api/api/v1/group/groupconnect"
 	"github.com/rigdev/rig-go-api/api/v1/image/imageconnect"
+	"github.com/rigdev/rig-go-api/api/v1/metrics/metricsconnect"
 	"github.com/rigdev/rig-go-api/api/v1/project/projectconnect"
 	"github.com/rigdev/rig-go-api/api/v1/role/roleconnect"
 	"github.com/rigdev/rig-go-api/api/v1/service_account/service_accountconnect"
@@ -50,6 +52,10 @@ type Client interface {
 	Role() roleconnect.ServiceClient
 
 	Settings() settingsconnect.ServiceClient
+
+	Metrics() metricsconnect.ServiceClient
+
+	Activity() activityconnect.ServiceClient
 
 	// Set the access- and refresh token pair. This will use the underlying SessionManager.
 	// The client will refresh the tokens in the background as needed.
@@ -87,6 +93,8 @@ type client struct {
 	environment     environmentconnect.ServiceClient
 	role            roleconnect.ServiceClient
 	settings        settingsconnect.ServiceClient
+	metrics         metricsconnect.ServiceClient
+	activity        activityconnect.ServiceClient
 }
 
 var _h2cClient = &http.Client{
@@ -150,6 +158,8 @@ func NewClient(opts ...Option) Client {
 		environment:     environmentconnect.NewServiceClient(cfg.hc, cfg.host, connect.WithInterceptors(ics...)),
 		role:            roleconnect.NewServiceClient(cfg.hc, cfg.host, connect.WithInterceptors(ics...)),
 		settings:        settingsconnect.NewServiceClient(cfg.hc, cfg.host, connect.WithInterceptors(ics...)),
+		metrics:         metricsconnect.NewServiceClient(cfg.hc, cfg.host, connect.WithInterceptors(ics...)),
+		activity:        activityconnect.NewServiceClient(cfg.hc, cfg.host, connect.WithInterceptors(ics...)),
 	}
 }
 
@@ -199,6 +209,14 @@ func (c *client) Environment() environmentconnect.ServiceClient {
 
 func (c *client) Role() roleconnect.ServiceClient {
 	return c.role
+}
+
+func (c *client) Metrics() metricsconnect.ServiceClient {
+	return c.metrics
+}
+
+func (c *client) Activity() activityconnect.ServiceClient {
+	return c.activity
 }
 
 func getEnv(key, def string) string {
