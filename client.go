@@ -17,6 +17,7 @@ import (
 	"github.com/rigdev/rig-go-api/api/v1/environment/environmentconnect"
 	"github.com/rigdev/rig-go-api/api/v1/group/groupconnect"
 	"github.com/rigdev/rig-go-api/api/v1/image/imageconnect"
+	"github.com/rigdev/rig-go-api/api/v1/issue/issueconnect"
 	"github.com/rigdev/rig-go-api/api/v1/metrics/metricsconnect"
 	"github.com/rigdev/rig-go-api/api/v1/project/projectconnect"
 	"github.com/rigdev/rig-go-api/api/v1/role/roleconnect"
@@ -57,6 +58,8 @@ type Client interface {
 
 	Activity() activityconnect.ServiceClient
 
+	Issue() issueconnect.ServiceClient
+
 	// Set the access- and refresh token pair. This will use the underlying SessionManager.
 	// The client will refresh the tokens in the background as needed.
 	SetAccessToken(accessToken, refreshToken string)
@@ -95,6 +98,7 @@ type client struct {
 	settings        settingsconnect.ServiceClient
 	metrics         metricsconnect.ServiceClient
 	activity        activityconnect.ServiceClient
+	issue           issueconnect.ServiceClient
 }
 
 var _h2cClient = &http.Client{
@@ -160,6 +164,7 @@ func NewClient(opts ...Option) Client {
 		settings:        settingsconnect.NewServiceClient(cfg.hc, cfg.host, connect.WithInterceptors(ics...)),
 		metrics:         metricsconnect.NewServiceClient(cfg.hc, cfg.host, connect.WithInterceptors(ics...)),
 		activity:        activityconnect.NewServiceClient(cfg.hc, cfg.host, connect.WithInterceptors(ics...)),
+		issue:           issueconnect.NewServiceClient(cfg.hc, cfg.host, connect.WithInterceptors(ics...)),
 	}
 }
 
@@ -217,6 +222,10 @@ func (c *client) Metrics() metricsconnect.ServiceClient {
 
 func (c *client) Activity() activityconnect.ServiceClient {
 	return c.activity
+}
+
+func (c *client) Issue() issueconnect.ServiceClient {
+	return c.issue
 }
 
 func getEnv(key, def string) string {
